@@ -143,6 +143,9 @@ jobs:
             npx cap add android
           fi
 
+      - name: Install TypeScript
+        run: npm install -D typescript
+
       - name: Sync Capacitor
         run: npx cap sync android
 
