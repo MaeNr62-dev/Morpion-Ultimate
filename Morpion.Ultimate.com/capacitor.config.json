@@ -1,0 +1,10 @@
+{
+  "appId": "com.morpionultimate.app",
+  "appName": "Morpion Ultimate",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    }
+  }
+}

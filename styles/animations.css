@@ -1,0 +1,177 @@
+/* ═══════════════════════════════════════════
+   animations.css – Animations CSS pour Morpion Ultimate
+   Victoire, défaite, entrées, cellules, confettis
+═══════════════════════════════════════════ */
+
+/* ── Keyframes ── */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(28px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+  60%  { opacity: 1; transform: scale(1.15) rotate(4deg); }
+  80%  { transform: scale(0.95) rotate(-2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.06); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15%       { transform: translateX(-6px); }
+  30%       { transform: translateX(6px); }
+  45%       { transform: translateX(-5px); }
+  60%       { transform: translateX(5px); }
+  75%       { transform: translateX(-3px); }
+  90%       { transform: translateX(3px); }
+}
+
+@keyframes winGlow {
+  0%   { box-shadow: 0 0 6px rgba(251,191,36,.3); }
+  50%  { box-shadow: 0 0 22px rgba(251,191,36,.9), 0 0 40px rgba(251,191,36,.4); }
+  100% { box-shadow: 0 0 6px rgba(251,191,36,.3); }
+}
+
+@keyframes drawGlow {
+  0%   { box-shadow: 0 0 6px rgba(148,163,184,.2); }
+  50%  { box-shadow: 0 0 18px rgba(148,163,184,.7); }
+  100% { box-shadow: 0 0 6px rgba(148,163,184,.2); }
+}
+
+@keyframes confetti {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(340px) rotate(720deg); opacity: 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes bounceIn {
+  0%   { opacity: 0; transform: scale(0.3); }
+  50%  { opacity: 1; transform: scale(1.1); }
+  80%  { transform: scale(.9); }
+  100% { transform: scale(1); }
+}
+
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: .5; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* ── Application des animations ── */
+
+/* Entrée des écrans */
+.screen.active       { animation: fadeIn .3s ease; }
+
+/* Entrée des cellules à la création de la grille */
+.cell {
+  animation: fadeIn .2s ease backwards;
+}
+.cell:nth-child(1) { animation-delay: .02s; }
+.cell:nth-child(2) { animation-delay: .04s; }
+.cell:nth-child(3) { animation-delay: .06s; }
+.cell:nth-child(4) { animation-delay: .08s; }
+.cell:nth-child(5) { animation-delay: .10s; }
+.cell:nth-child(6) { animation-delay: .12s; }
+.cell:nth-child(7) { animation-delay: .14s; }
+.cell:nth-child(8) { animation-delay: .16s; }
+.cell:nth-child(9) { animation-delay: .18s; }
+
+/* Cellule jouée */
+.cell.pop { animation: popIn .35s cubic-bezier(.34,1.56,.64,1) forwards; }
+
+/* Cellule gagnante */
+.cell.winning {
+  animation: winGlow 1s ease-in-out infinite;
+}
+
+/* Plateau en match nul */
+.board.draw .cell {
+  animation: drawGlow 1.2s ease-in-out infinite;
+}
+
+/* Shake en cas d'erreur (cellule déjà jouée) */
+.cell.invalid { animation: shake .4s ease; }
+
+/* Score quand il augmente */
+.score-val.bump { animation: pulse .35s ease; }
+
+/* Label tour de jeu */
+.turn-label.change { animation: slideDown .3s ease; }
+
+/* Modale de résultat */
+.result-emoji { animation: bounceIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+.result-title  { animation: slideUp .4s ease .1s both; }
+
+/* Throbber IA en attente */
+.ai-thinking::after {
+  content: ' ⟳';
+  display: inline-block;
+  animation: spin .8s linear infinite;
+}
+
+/* Confetti container */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  width: 10px;
+  height: 14px;
+  border-radius: 2px;
+  animation: confetti 2.2s ease-in forwards;
+}
+
+/* Effet de ripple sur le click d'une cellule */
+.cell .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.25);
+  width: 60px;
+  height: 60px;
+  margin-top: -30px;
+  margin-left: -30px;
+  animation: ripple .5s linear;
+  pointer-events: none;
+}
+
+/* Hover accent sur les boutons principaux déjà en main.css */
+
+/* Transition fluide du thème */
+body, .app-header, .setup-card, .scorebar, .modal-card,
+.cell, .btn-icon, .mode-btn, .diff-btn, .history-item,
+.leaderboard-row, .team, .team-inputs input {
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    box-shadow var(--transition);
+}

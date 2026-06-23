@@ -1,0 +1,16 @@
+/* ═══════════════════════════════════════════
+   themes/custom.css – Thème personnalisé utilisateur
+   Ce fichier est écrasé dynamiquement par l'éditeur de thème (ui.js).
+   Ne pas éditer manuellement : les modifications seront perdues.
+═══════════════════════════════════════════ */
+
+/*
+  Exemple de surcharge personnalisée :
+
+  body.theme-custom {
+    --bg:       #1a0a2e;
+    --accent:   #a855f7;
+    --x-color:  #f0abfc;
+    --o-color:  #67e8f9;
+  }
+*/

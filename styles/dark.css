@@ -1,0 +1,120 @@
+/* ═══════════════════════════════════════════
+   dark.css – Thème sombre (appliqué sur body.theme-dark)
+   Les variables sont déjà déclarées dans main.css,
+   ce fichier les écrase pour le thème clair quand la classe change.
+═══════════════════════════════════════════ */
+
+/* Le thème sombre est le défaut dans :root, donc rien à surcharger ici
+   sauf si on veut des règles supplémentaires spécifiques. */
+
+body.theme-dark {
+  /* Variables redéclarées pour être explicites et éviter les conflits */
+  --bg:          #0f172a;
+  --bg-card:     #1e293b;
+  --bg-cell:     #1e293b;
+  --bg-cell-h:   #334155;
+  --text:        #f1f5f9;
+  --text-muted:  #94a3b8;
+  --accent:      #6366f1;
+  --accent-h:    #818cf8;
+  --x-color:     #f472b6;
+  --o-color:     #34d399;
+  --border:      #334155;
+  --danger:      #ef4444;
+  --success:     #22c55e;
+  --shadow:      0 4px 24px rgba(0,0,0,.45);
+}
+
+/* ── Thème clair (body.theme-light) ── */
+body.theme-light {
+  --bg:          #f8fafc;
+  --bg-card:     #ffffff;
+  --bg-cell:     #f1f5f9;
+  --bg-cell-h:   #e2e8f0;
+  --text:        #0f172a;
+  --text-muted:  #64748b;
+  --accent:      #4f46e5;
+  --accent-h:    #6366f1;
+  --x-color:     #e11d48;
+  --o-color:     #059669;
+  --border:      #e2e8f0;
+  --danger:      #dc2626;
+  --success:     #16a34a;
+  --shadow:      0 4px 24px rgba(0,0,0,.10);
+}
+
+/* ── Thème Océan ── */
+body.theme-ocean {
+  --bg:          #0a1628;
+  --bg-card:     #0f2338;
+  --bg-cell:     #0f2338;
+  --bg-cell-h:   #1a3a58;
+  --text:        #e0f4ff;
+  --text-muted:  #7ab8d9;
+  --accent:      #0ea5e9;
+  --accent-h:    #38bdf8;
+  --x-color:     #38bdf8;
+  --o-color:     #2dd4bf;
+  --border:      #1a3a58;
+  --danger:      #f87171;
+  --success:     #2dd4bf;
+  --shadow:      0 4px 24px rgba(0,0,0,.5);
+}
+
+/* ── Thème Forêt ── */
+body.theme-forest {
+  --bg:          #0a1e0f;
+  --bg-card:     #122618;
+  --bg-cell:     #122618;
+  --bg-cell-h:   #1c3825;
+  --text:        #d1fae5;
+  --text-muted:  #6ee7b7;
+  --accent:      #10b981;
+  --accent-h:    #34d399;
+  --x-color:     #34d399;
+  --o-color:     #86efac;
+  --border:      #1c3825;
+  --danger:      #f87171;
+  --success:     #34d399;
+  --shadow:      0 4px 24px rgba(0,0,0,.5);
+}
+
+/* ── Thème Coucher de soleil ── */
+body.theme-sunset {
+  --bg:          #1c0a00;
+  --bg-card:     #2d1200;
+  --bg-cell:     #2d1200;
+  --bg-cell-h:   #4a1f00;
+  --text:        #fff7ed;
+  --text-muted:  #fbbf24;
+  --accent:      #f97316;
+  --accent-h:    #fb923c;
+  --x-color:     #f43f5e;
+  --o-color:     #fbbf24;
+  --border:      #4a1f00;
+  --danger:      #ef4444;
+  --success:     #fbbf24;
+  --shadow:      0 4px 24px rgba(0,0,0,.5);
+}
+
+/* ── Thème Néon ── */
+body.theme-neon {
+  --bg:          #000000;
+  --bg-card:     #0d0d0d;
+  --bg-cell:     #0d0d0d;
+  --bg-cell-h:   #1a1a1a;
+  --text:        #ffffff;
+  --text-muted:  #a0a0a0;
+  --accent:      #00ffcc;
+  --accent-h:    #33ffdd;
+  --x-color:     #ff00ff;
+  --o-color:     #00ffcc;
+  --border:      #2a2a2a;
+  --danger:      #ff0040;
+  --success:     #00ffcc;
+  --shadow:      0 4px 24px rgba(0,255,204,.15);
+}
+
+body.theme-neon .cell.cell-x { text-shadow: 0 0 12px #ff00ff; }
+body.theme-neon .cell.cell-o { text-shadow: 0 0 12px #00ffcc; }
+body.theme-neon .app-title .accent { text-shadow: 0 0 10px #00ffcc; }

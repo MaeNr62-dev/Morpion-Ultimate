@@ -1,0 +1,230 @@
+/* ═══════════════════════════════════════════
+   avatar.css – Styles du sélecteur d'avatar
+   Morpion Ultimate
+═══════════════════════════════════════════ */
+
+/* ── Bouton d'avatar dans le setup ── */
+.avatar-pick-btn {
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg-cell);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+  flex-shrink: 0;
+  position: relative;
+}
+.avatar-pick-btn::after {
+  content: '✏️';
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  font-size: 14px;
+  background: var(--bg-card);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  line-height: 1;
+}
+.avatar-pick-btn:hover {
+  border-color: var(--accent);
+  transform: scale(1.08);
+  box-shadow: 0 0 0 3px rgba(99,102,241,.2);
+}
+
+/* ── Modale avatar ── */
+.avatar-picker-card {
+  max-width: 480px;
+  padding: 24px;
+}
+
+/* ── Onglets ── */
+.avatar-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  background: var(--bg-cell);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+.avatar-tab {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  white-space: nowrap;
+}
+.avatar-tab:hover  { background: var(--bg-cell-h); color: var(--text); }
+.avatar-tab.active { background: var(--accent);    color: #fff; }
+
+.avatar-tab-content { display: none; }
+.avatar-tab-content.active { display: block; }
+
+/* ── Grille emojis ── */
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 4px;
+}
+.emoji-btn {
+  aspect-ratio: 1;
+  font-size: 1.5rem;
+  background: var(--bg-cell);
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--transition), background var(--transition), transform .12s;
+  line-height: 1;
+}
+.emoji-btn:hover   { background: var(--bg-cell-h); border-color: var(--accent); transform: scale(1.12); }
+.emoji-btn.selected{ border-color: var(--accent); background: rgba(99,102,241,.18); }
+
+/* ── Caméra ── */
+.camera-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+#avatar-video {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent);
+  display: none;
+  background: #000;
+}
+
+#camera-preview-wrap img,
+#upload-preview {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent);
+  display: block;
+  margin: 0 auto;
+}
+
+.camera-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.camera-hint {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .8rem;
+  margin-top: 4px;
+}
+
+/* ── Upload zone ── */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+  color: var(--text-muted);
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(99,102,241,.06);
+  color: var(--text);
+}
+.upload-icon { font-size: 2.5rem; margin-bottom: 8px; }
+.upload-hint { font-size: .78rem; margin-top: 6px; opacity: .7; }
+
+#upload-preview-wrap { text-align: center; margin-top: 16px; }
+
+/* ── Aperçu courant ── */
+.avatar-current {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.avatar-current-label { color: var(--text-muted); font-size: .85rem; }
+.avatar-preview-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: var(--bg-cell);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── Cellules avatar (plateau) ── */
+.cell-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.cell-avatar img {
+  width: 72%;
+  height: 72%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ── Scorebar avatars ── */
+.score-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-cell);
+  margin: 0 auto 4px;
+  font-size: 1.3rem;
+}
+.score-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .emoji-grid { grid-template-columns: repeat(6, 1fr); }
+  #avatar-video { width: 200px; height: 200px; }
+  #camera-preview-wrap img { width: 160px; height: 160px; }
+}

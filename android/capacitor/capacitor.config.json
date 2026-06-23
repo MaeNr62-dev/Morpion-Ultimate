@@ -1,0 +1,18 @@
+{
+  "appId": "com.morpion.ultimate",
+  "appName": "Morpion Ultimate",
+  "webDir": "../..",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#0f172a",
+      "showSpinner": false
+    }
+  }
+}

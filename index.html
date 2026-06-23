@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+  content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: blob:;
+    media-src 'self' blob:;
+    connect-src 'self';
+  ">
+  <title>Morpion Ultimate</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/animations.css" />
+  <link rel="stylesheet" href="styles/dark.css" id="theme-dark-sheet" />
+  <link rel="stylesheet" href="styles/themes/custom.css" id="theme-custom-sheet" />
+  <link rel="stylesheet" href="styles/avatar.css" />
+</head>
+<body class="theme-dark">
+
+<!-- ══════════════════════════════════════════
+     EN-TÊTE
+═══════════════════════════════════════════ -->
+<header class="app-header">
+  <div class="header-left">
+    <span class="logo">🎮</span>
+    <h1 class="app-title">Morpion <span class="accent">Ultimate</span></h1>
+  </div>
+  <div class="header-right">
+    <button id="btn-history"      class="btn-icon" title="Historique">📋</button>
+    <button id="btn-leaderboard"  class="btn-icon" title="Classement">🏆</button>
+    <button id="btn-sound"        class="btn-icon" title="Sons">🔊</button>
+    <button id="btn-theme-editor" class="btn-icon" title="Éditeur de thème">🎨</button>
+    <button id="btn-toggle-theme" class="btn-icon" title="Changer thème">🌗</button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════
+     ÉCRAN DE CONFIGURATION
+═══════════════════════════════════════════ -->
+<main id="screen-setup" class="screen active">
+  <div class="setup-card">
+    <h2 class="setup-title">Configuration de la partie</h2>
+
+    <!-- Choix du mode de jeu -->
+    <div class="form-group">
+      <label class="form-label">Mode de jeu</label>
+      <div class="mode-grid">
+        <button class="mode-btn active" data-mode="1v1">👥 1v1 Local</button>
+        <button class="mode-btn" data-mode="1vAI">🤖 1 vs IA</button>
+        <button class="mode-btn" data-mode="2v2">👥👥 2v2 Équipes</button>
+        <button class="mode-btn" data-mode="3v3">🏟️ 3v3 Équipes</button>
+        <button class="mode-btn" data-mode="4v4">🏟️🏟️ 4v4 Équipes</button>
+      </div>
+    </div>
+
+    <!-- Section 1v1 -->
+    <div id="section-1v1" class="player-section">
+      <div class="player-inputs">
+
+        <!-- Joueur X -->
+        <div class="player-input-group" id="player-input-group-x">
+          <!-- Le bouton avatar est injecté ici par avatar.js -->
+          <input type="text" id="name-p1" placeholder="Joueur X" maxlength="20" />
+        </div>
+
+        <span class="vs-label">VS</span>
+
+        <!-- Joueur O -->
+        <div class="player-input-group" id="player-input-group-o">
+          <!-- Le bouton avatar est injecté ici par avatar.js -->
+          <input type="text" id="name-p2" placeholder="Joueur O" maxlength="20" />
+        </div>
+
+      </div>
+      <p class="avatar-tip">💡 Clique sur le symbole pour le personnaliser (emoji, photo ou image)</p>
+    </div>
+
+    <!-- Section 1v IA -->
+    <div id="section-1vAI" class="player-section hidden">
+      <div class="player-inputs">
+
+        <div class="player-input-group" id="player-input-group-human">
+          <!-- Bouton avatar injecté par avatar.js -->
+          <input type="text" id="name-human" placeholder="Votre nom" maxlength="20" />
+        </div>
+
+        <span class="vs-label">VS</span>
+
+        <div class="player-input-group ai-badge">
+          <span class="symbol o">🤖</span>
+          <span class="ai-label">IA</span>
+        </div>
+
+      </div>
+      <p class="avatar-tip">💡 Clique sur le symbole pour le personnaliser</p>
+      <div class="form-group mt-12">
+        <label class="form-label">Difficulté de l'IA</label>
+        <div class="difficulty-grid">
+          <button class="diff-btn" data-diff="beginner">🟢 Débutant</button>
+          <button class="diff-btn active" data-diff="normal">🟡 Normal</button>
+          <button class="diff-btn" data-diff="hard">🟠 Difficile</button>
+          <button class="diff-btn" data-diff="pro">🔴 Pro</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section équipes -->
+    <div id="section-teams" class="player-section hidden">
+      <div class="teams-container">
+        <div class="team team-x">
+          <h3 class="team-title"><span class="symbol x">✕</span> Équipe X</h3>
+          <div id="team-x-inputs" class="team-inputs"></div>
+        </div>
+        <div class="team team-o">
+          <h3 class="team-title"><span class="symbol o">○</span> Équipe O</h3>
+          <div id="team-o-inputs" class="team-inputs"></div>
+        </div>
+      </div>
+    </div>
+
+    <button id="btn-start" class="btn-primary btn-start">▶ Commencer</button>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════
+     ÉCRAN DE JEU
+═══════════════════════════════════════════ -->
+<main id="screen-game" class="screen hidden">
+
+  <div class="scorebar">
+    <div class="score-side score-x">
+      <div class="score-avatar" id="score-avatar-x"></div>
+      <div id="score-x-name" class="score-name">Joueur X</div>
+      <div id="score-x-val"  class="score-val">0</div>
+    </div>
+    <div class="score-center">
+      <div id="turn-label"   class="turn-label">Tour de…</div>
+      <div id="game-status"  class="game-status"></div>
+    </div>
+    <div class="score-side score-o">
+      <div class="score-avatar" id="score-avatar-o"></div>
+      <div id="score-o-name" class="score-name">Joueur O</div>
+      <div id="score-o-val"  class="score-val">0</div>
+    </div>
+  </div>
+
+  <div id="board" class="board" role="grid" aria-label="Grille de morpion"></div>
+
+  <div class="game-actions">
+    <button id="btn-replay" class="btn-secondary">🔁 Rejouer</button>
+    <button id="btn-menu"   class="btn-ghost">⬅ Menu</button>
+  </div>
+
+  <div id="team-info" class="team-info hidden">
+    <div id="team-x-info" class="team-badge badge-x"></div>
+    <div id="team-o-info" class="team-badge badge-o"></div>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════
+     MODALES
+═══════════════════════════════════════════ -->
+
+<!-- Résultat -->
+<div id="modal-result" class="modal hidden">
+  <div class="modal-card result-card">
+    <div id="result-emoji"    class="result-emoji"></div>
+    <h2 id="result-title"     class="result-title"></h2>
+    <p  id="result-subtitle"  class="result-subtitle"></p>
+    <div class="modal-actions">
+      <button id="result-replay" class="btn-primary">🔁 Rejouer</button>
+      <button id="result-menu"   class="btn-ghost">⬅ Menu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Historique -->
+<div id="modal-history" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>📋 Historique des parties</h2>
+      <button class="modal-close" data-modal="modal-history">✕</button>
+    </div>
+    <div id="history-list" class="history-list"></div>
+    <div class="modal-footer">
+      <button id="btn-clear-history" class="btn-danger">🗑 Effacer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Classement -->
+<div id="modal-leaderboard" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>🏆 Classement</h2>
+      <button class="modal-close" data-modal="modal-leaderboard">✕</button>
+    </div>
+    <div id="leaderboard-list" class="leaderboard-list"></div>
+  </div>
+</div>
+
+<!-- Éditeur de thème -->
+<div id="modal-theme-editor" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>🎨 Éditeur de thème</h2>
+      <button class="modal-close" data-modal="modal-theme-editor">✕</button>
+    </div>
+    <div class="theme-editor-body">
+      <div class="theme-presets">
+        <h3>Thèmes prédéfinis</h3>
+        <div class="preset-grid">
+          <button class="preset-btn" data-preset="dark">🌑 Sombre</button>
+          <button class="preset-btn" data-preset="light">☀️ Clair</button>
+          <button class="preset-btn" data-preset="ocean">🌊 Océan</button>
+          <button class="preset-btn" data-preset="forest">🌲 Forêt</button>
+          <button class="preset-btn" data-preset="sunset">🌅 Coucher</button>
+          <button class="preset-btn" data-preset="neon">⚡ Néon</button>
+        </div>
+      </div>
+      <div class="theme-custom">
+        <h3>Personnalisé</h3>
+        <div class="color-row"><label>Fond</label>    <input type="color" id="tc-bg"     value="#0f172a" /></div>
+        <div class="color-row"><label>Texte</label>   <input type="color" id="tc-text"   value="#f1f5f9" /></div>
+        <div class="color-row"><label>Accent</label>  <input type="color" id="tc-accent" value="#6366f1" /></div>
+        <div class="color-row"><label>Cellule</label> <input type="color" id="tc-cell"   value="#1e293b" /></div>
+        <div class="color-row"><label>X couleur</label><input type="color" id="tc-x"     value="#f472b6" /></div>
+        <div class="color-row"><label>O couleur</label><input type="color" id="tc-o"     value="#34d399" /></div>
+        <button id="btn-apply-theme" class="btn-primary mt-12">✅ Appliquer</button>
+        <button id="btn-reset-theme" class="btn-ghost mt-8">↩ Réinitialiser</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- À propos -->
+<div id="modal-about" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>🎮 Morpion Ultimate</h2>
+      <button class="modal-close" data-modal="modal-about">✕</button>
+    </div>
+    <div class="about-body">
+      <p class="about-version" id="about-version">v1.1.0</p>
+      <p>Jeu de morpion complet avec IA Minimax, modes équipes,
+         avatars personnalisés (emoji / photo / image) et thèmes.</p>
+      <ul class="about-features">
+        <li>🤖 IA Minimax avec Alpha-Beta pruning</li>
+        <li>👥 Modes 1v1, 1vIA, 2v2, 3v3, 4v4</li>
+        <li>📷 Avatars : emoji, photo caméra, image</li>
+        <li>🏆 Classement et historique persistants</li>
+        <li>🎨 Éditeur de thème CSS complet</li>
+        <li>🔊 Sons synthétisés Web Audio</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="scripts/sound.js"></script>
+<script src="scripts/ai/evaluation.js"></script>
+<script src="scripts/ai/minimax.js"></script>
+<script src="scripts/ai/difficulty.js"></script>
+<script src="scripts/history.js"></script>
+<script src="scripts/teams.js"></script>
+<script src="scripts/avatar.js"></script>
+<script src="scripts/game.js"></script>
+<script src="scripts/ui.js"></script>
+
+</body>
+</html>

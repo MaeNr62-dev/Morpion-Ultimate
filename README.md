@@ -1,115 +1,194 @@
-# 🤖 Morpion Ultimate – Build Android via GitHub Actions
+# 🎮 Morpion Ultimate
 
-Ce dossier contient tout ce qu'il faut pour générer automatiquement
-un APK Android via **GitHub Actions**, sans avoir Android Studio en local.
+> Jeu de morpion complet, multiplateforme, avec IA Minimax, modes équipes, thèmes et historique persistant.
 
----
-
-## 📁 Structure
-
-```
-.
-├─ .github/
-│  └─ workflows/
-│     └─ build-android.yml   ← Le workflow GitHub Actions
-├─ capacitor.config.json     ← Config Capacitor
-├─ package.json              ← Dépendances Capacitor
-└─ README.md
-```
+![Version](https://img.shields.io/badge/version-1.0.0-6366f1)
+![Electron](https://img.shields.io/badge/Electron-30-47848F)
+![License](https://img.shields.io/badge/license-MIT-22c55e)
 
 ---
 
-## 🚀 Utilisation
+## ✨ Fonctionnalités
 
-### Étape 1 — Copie ces fichiers dans ton dépôt Morpion Ultimate
+### 🎮 Modes de jeu
+| Mode       | Description                          |
+|-----------|--------------------------------------|
+| 1v1 Local  | Deux joueurs en local avec noms       |
+| 1 vs IA    | Joueur contre l'intelligence artificielle |
+| 2v2 Équipes | Deux équipes de 2 joueurs chacune     |
+| 3v3 Équipes | Deux équipes de 3 joueurs chacune     |
+| 4v4 Équipes | Deux équipes de 4 joueurs chacune     |
 
-Place le dossier `.github/` et les fichiers `capacitor.config.json`
-et `package.json` **à la racine** de ton dépôt GitHub.
+### 🤖 Intelligence Artificielle
+- **Algorithme Minimax** pur avec **élagage Alpha-Bêta**
+- 4 niveaux de difficulté :
+  - 🟢 **Débutant** – coups aléatoires
+  - 🟡 **Normal** – Minimax profondeur 2 + 25% aléatoire
+  - 🟠 **Difficile** – Minimax + heuristique, profondeur 4
+  - 🔴 **Pro** – Minimax profondeur maximale (résolution parfaite)
 
-```
-morpion-ultimate/          ← racine du dépôt
-├─ .github/
-│  └─ workflows/
-│     └─ build-android.yml
-├─ capacitor.config.json   ← nouveau
-├─ package.json            ← mettre à jour (voir ci-dessous)
-├─ main.js
-├─ index.html
-└─ ...
-```
+### 🏆 Données persistantes
+- **Historique** des 100 dernières parties (localStorage)
+- **Classement** avec victoires, défaites, nuls et ratio
+- Effacement manuel possible
 
-> ⚠️ Fusionne le `package.json` fourni avec celui de ton projet :
-> ajoute les `devDependencies` Capacitor à ton `package.json` existant.
+### 🎨 Interface
+- **6 thèmes prédéfinis** : Sombre, Clair, Océan, Forêt, Coucher de soleil, Néon
+- **Éditeur de thème** couleur personnalisé
+- **Animations CSS** : apparition des cellules, victoire, confettis, shake erreur
+- **Sons synthétisés** via Web Audio API (aucun fichier requis)
+- Toggle son activé/désactivé
+
+### 🪟 Multiplateforme
+- **Windows** : installeur NSIS + Portable (`.exe`)
+- **Linux** : AppImage + `.deb`
+- **Android** : APK via Capacitor
+- **macOS** : DMG (configuration incluse)
 
 ---
 
-### Étape 2 — Push sur GitHub
+## 🚀 Démarrage rapide
 
 ```bash
-git add .github/ capacitor.config.json
-git commit -m "feat: add GitHub Actions Android build"
-git push
+# Cloner le dépôt
+git clone https://github.com/votre-user/morpion-ultimate.git
+cd morpion-ultimate
+
+# Installer les dépendances
+npm install
+
+# Lancer en développement
+npm start
 ```
 
-Le workflow se déclenche **automatiquement** à chaque push sur `main` ou `master`.
-
 ---
 
-### Étape 3 — Récupère l'APK
+## 📦 Build
 
-1. Va sur ton dépôt GitHub → onglet **Actions**
-2. Clique sur le dernier workflow `Build Android APK`
-3. En bas de la page → **Artifacts** → télécharge `MorpionUltimate-APK`
-
----
-
-## 🏷️ Créer une Release avec l'APK
-
-Pour publier automatiquement l'APK sur une Release GitHub,
-crée un tag de version :
-
+### Windows
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+npm run build:win
+# ou
+node build/scripts/build-win.js
 ```
+Génère `dist/MorpionUltimate-1.0.0-Setup.exe`
 
-Le workflow détecte le tag et crée une Release avec l'APK en pièce jointe.
+### Linux
+```bash
+npm run build:linux
+# ou
+node build/scripts/build-linux.js
+```
+Génère `dist/MorpionUltimate-1.0.0.AppImage` et `.deb`
+
+### Android (APK)
+```bash
+# Prérequis : Android Studio, JDK 17, ANDROID_HOME configuré
+npm run build:android
+# ou
+bash build/scripts/build-android.sh
+```
+Génère `dist/MorpionUltimate-debug.apk`
+
+### Toutes les plateformes
+```bash
+npm run build
+```
 
 ---
 
-## ⏱️ Durée du build
+## 📁 Structure du projet
 
-| Étape              | Durée estimée |
-|-------------------|---------------|
-| Setup environnement | ~1 min       |
-| npm install         | ~1 min       |
-| Capacitor sync      | ~30 sec      |
-| Gradle build        | ~3–5 min     |
-| **Total**           | **~6–7 min** |
-
-Le cache Gradle (étape 11) réduit les builds suivants à ~2–3 min.
+```
+morpion-ultimate/
+├─ package.json              # Config npm + scripts
+├─ main.js                   # Processus principal Electron
+├─ preload.js                # Bridge sécurisé main ↔ renderer
+├─ index.html                # Interface principale
+│
+├─ styles/
+│  ├─ main.css               # Styles fondamentaux + variables CSS
+│  ├─ dark.css               # Thèmes (sombre, clair, océan, forêt, coucher, néon)
+│  ├─ animations.css         # Keyframes et animations
+│  └─ themes/
+│     └─ custom.css          # Thème personnalisé utilisateur
+│
+├─ scripts/
+│  ├─ sound.js               # Moteur audio Web Audio API
+│  ├─ history.js             # Historique + classement (localStorage)
+│  ├─ teams.js               # Gestion des modes équipes
+│  ├─ game.js                # Logique principale du jeu
+│  ├─ ui.js                  # Contrôleur UI complet
+│  └─ ai/
+│     ├─ evaluation.js       # Évaluation heuristique du plateau
+│     ├─ minimax.js          # Algorithme Minimax + Alpha-Bêta
+│     └─ difficulty.js       # Niveaux de difficulté
+│
+├─ assets/
+│  ├─ icons/                 # icon.png / .ico / .icns
+│  └─ sounds/                # Sons personnalisés (optionnel)
+│
+├─ build/
+│  ├─ electron-builder.json  # Configuration du build
+│  └─ scripts/
+│     ├─ build-win.js        # Script build Windows
+│     ├─ build-linux.js      # Script build Linux
+│     └─ build-android.sh    # Script build Android
+│
+├─ android/
+│  └─ capacitor/
+│     └─ capacitor.config.json
+│
+├─ README.md
+└─ .gitignore
+```
 
 ---
 
-## 🔧 Personnalisation
+## 🧠 Architecture de l'IA
 
-### Changer l'ID de l'app
-Dans `capacitor.config.json` :
-```json
-"appId": "com.tonnom.morpion"
+L'IA implémente l'algorithme **Minimax** classique avec **élagage Alpha-Bêta** :
+
+```
+                 MAX (IA = O)
+                /      |      \
+              O·0     O·4     O·8
+             / | \   / | \   / | \
+           MIN MIN MIN ...
+          (X) (X) (X)
 ```
 
-### Build release (signé) au lieu de debug
-Ajoute tes secrets dans GitHub → Settings → Secrets :
-- `KEYSTORE_FILE` (base64 du .jks)
-- `KEY_ALIAS`
-- `KEY_PASSWORD`
-- `STORE_PASSWORD`
+- **Terminal states** : victoire (+100−depth), défaite (−100+depth), nul (0)
+- **Élagage α-β** : élimine les branches inutiles, réduit la complexité de O(b^d) à O(b^(d/2))
+- **Évaluation heuristique** : compte les alignements potentiels + bonus centre/coins
+- **Profondeurs** : Débutant=0 (aléatoire), Normal=2, Difficile=4, Pro=9 (parfait)
 
-Puis remplace dans le workflow :
-```yaml
-run: ./gradlew assembleRelease
+---
+
+## 🎨 Système de thèmes
+
+Tous les thèmes sont basés sur des **variables CSS** (`--bg`, `--accent`, `--x-color`…).
+L'éditeur de thème modifie ces variables à chaud via une balise `<style>` inline.
+
+Pour créer un thème manuellement, ajoutez dans `styles/themes/custom.css` :
+```css
+body.theme-custom {
+  --bg:       #1a0a2e;
+  --accent:   #a855f7;
+  --x-color:  #f0abfc;
+  --o-color:  #67e8f9;
+}
 ```
 
-### Désactiver le déclenchement sur PR
-Retire le bloc `pull_request` du workflow.
+---
+
+## 🔊 Système audio
+
+Les sons sont synthétisés en temps réel via **Web Audio API** — aucun fichier audio nécessaire.
+La fréquence, durée, type d'onde et enveloppe ADSR sont configurés dans `scripts/sound.js`.
+
+---
+
+## 📄 Licence
+
+MIT © 2025 Morpion Ultimate
