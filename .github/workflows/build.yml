@@ -25,7 +25,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --include=dev
 
       - name: Build Windows
         run: npx electron-builder --win --config build/electron-builder.json
@@ -55,7 +55,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --include=dev
 
       - name: Build Linux
         run: npx electron-builder --linux --config build/electron-builder.json
@@ -83,7 +83,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --include=dev
 
       - name: Build macOS
         run: npx electron-builder --mac --config build/electron-builder.json
@@ -122,7 +122,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --include=dev
 
       - name: Install Capacitor
         run: |
