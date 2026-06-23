@@ -1,0 +1,124 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch: # Permet de lancer manuellement depuis GitHub
+
+jobs:
+  build-android:
+    name: Build APK (Capacitor)
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Récupère le code ──
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Node.js ──
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── 3. Java 17 (requis par Gradle) ──
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # ── 4. Android SDK ──
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      # ── 5. Dépendances npm ──
+      - name: Install dependencies
+        run: npm ci
+
+      # ── 6. Installe Capacitor ──
+      - name: Install Capacitor
+        run: |
+          npm install --save-dev \
+            @capacitor/cli \
+            @capacitor/core \
+            @capacitor/android
+
+      # ── 7. Initialise Capacitor (si pas encore fait) ──
+      - name: Init Capacitor
+        run: |
+          if [ ! -f "capacitor.config.json" ]; then
+            npx cap init "Morpion Ultimate" "com.morpion.ultimate" \
+              --web-dir . \
+              2>/dev/null || true
+          fi
+
+      # ── 8. Ajoute la plateforme Android ──
+      - name: Add Android platform
+        run: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+
+      # ── 9. Sync les assets web vers Android ──
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      # ── 10. Rend Gradle exécutable ──
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      # ── 11. Cache Gradle (accélère les builds suivants) ──
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('android/**/*.gradle*', 'android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: gradle-
+
+      # ── 12. Build APK debug ──
+      - name: Build APK (debug)
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+      # ── 13. Renomme l'APK ──
+      - name: Rename APK
+        run: |
+          mkdir -p dist
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+             dist/MorpionUltimate-debug.apk
+
+      # ── 14. Upload l'APK comme artefact GitHub ──
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MorpionUltimate-APK
+          path: dist/MorpionUltimate-debug.apk
+          retention-days: 30
+
+      # ── 15. (Optionnel) Crée une Release GitHub si c'est un tag ──
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/MorpionUltimate-debug.apk
+          name: Morpion Ultimate ${{ github.ref_name }}
+          body: |
+            ## 🎮 Morpion Ultimate ${{ github.ref_name }}
+
+            ### Téléchargement
+            - **Android APK** : `MorpionUltimate-debug.apk`
+
+            ### Installation
+            1. Télécharge le fichier `.apk`
+            2. Active "Sources inconnues" dans Paramètres → Sécurité
+            3. Ouvre le fichier et installe
+
+            > Build généré automatiquement par GitHub Actions.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
